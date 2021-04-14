@@ -114,7 +114,7 @@ public class UI
                 mainInterface();
                 break;
             case 3:
-                mainInterface();
+                data.tournamentSim();
                 break;
             default:
                 System.out.println("Not a valid option");
