@@ -25,7 +25,7 @@ public class Data
             Team team = new Team(teamName);
             Main.teams.add(team);
             Writer output;
-            output = new BufferedWriter(new FileWriter("src/Data.txt",true));
+            output = new BufferedWriter(new FileWriter("src/Teams.txt",true));
             output.append("\n");
             output.append(teamName + ":player 1 - " + player1 +":player 2 - " + player2);
             output.close();
@@ -61,7 +61,7 @@ public class Data
         }
     }
 
-    public void randomMatchUps(ArrayList<Team> randomTeams) // creates random match-ups of the teams
+    public void randomMatchUps(ArrayList<Team> randomTeams, ArrayList<Match> randomMatch) // creates random match-ups of the teams
     {
         ArrayList<Team> teamsList = new ArrayList<>();
         teamsList = randomTeams;
@@ -73,7 +73,7 @@ public class Data
             team1 = teamsList.get(i);
             team2 = teamsList.get(i+1);
             Match match = new Match(team1,team2);
-            Main.matches.add(match);
+            randomMatch.add(match);
             System.out.println("A match between " + team1 + " and " + team2 + " has now been created");
         }
 
@@ -98,34 +98,21 @@ public class Data
             System.out.println(c);
         }
 
+        return;
     }
 
-    public void registerMatchResult(ArrayList<Match> matches) //MANGLER
+    public void teamExecute(ArrayList<Match> matches) //MANGLER
     {
-        Scanner scan = new Scanner(System.in);
         int i = 0;
         while(matches.size() > i)
         {
             Match match = matches.get(i);
-            Main.currentTeams = Main.teams;
 
-            System.out.println("Match " + (i+1));
-            System.out.println("Set goals for team 1 " + match.getTeam1());
-            int input = scan.nextInt();
-            match.setTeam1Goals(input);
-
-            System.out.println("Set goals for team 2 " + match.getTeam2());
-            int input2 = scan.nextInt();
-            match.setTeam2Goals(input2);
-
-            if(match.getTeam1Goals() > match.getTeam2Goals())
-            {
-                match.getTeam2().setKnockedOut(true);
-            }
-
-            else if(match.getTeam1Goals() < match.getTeam2Goals())
-            {
-                match.getTeam1().setKnockedOut(true);
+                //set teams that lose to have boolean true knockOut
+                if (match.getTeam1Goals() > match.getTeam2Goals()) {
+                    match.getTeam2().setKnockedOut(true);
+                } else if (match.getTeam1Goals() < match.getTeam2Goals()) {
+                    match.getTeam1().setKnockedOut(true);
 
                 }
 

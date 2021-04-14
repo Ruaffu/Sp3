@@ -78,11 +78,22 @@ public class UI
         switch (userInput)
         {
             case 1:
-                data.randomMatchUps(Main.teams);
+                data.randomMatchUps(Main.teams,Main.matches);
                 mainInterface();
                 break;
             case 2:
-                data.registerMatchResult();
+                if(Main.currentTeams.size() == 0) {
+                    data.registerMatches(Main.matches);
+                }
+                else if(Main.currentTeams.size() == 8) {
+                    data.registerMatches(Main.quarterFinals);
+                }
+                else if(Main.currentTeams.size() == 4) {
+                    data.registerMatches(Main.semifinals);
+                }
+                else if(Main.currentTeams.size() == 2){
+                    data.registerMatches(Main.Finals);
+                }
                 mainInterface();
                 break;
             case 3:
@@ -100,7 +111,8 @@ public class UI
         System.out.println("TOURNAMENT MENU");
         System.out.println("1.Tournament placements");
         System.out.println("2.Tournament match schedule");
-        System.out.println("3.Back to menu");
+        System.out.println("3.Tournament simulation");
+        System.out.println("4.Back to menu");
         userInput = interfaceScan.nextInt();
 
         switch (userInput)
@@ -115,6 +127,9 @@ public class UI
                 break;
             case 3:
                 data.tournamentSim();
+                break;
+            case 4:
+                mainInterface();
                 break;
             default:
                 System.out.println("Not a valid option");
