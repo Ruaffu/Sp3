@@ -49,10 +49,10 @@ public class Match {
     @Override
     public String toString() {
         return "Match{" +
-                "team1=" + team1 +
-                ", team2=" + team2 +
-                ", team1Goals=" + team1Goals +
-                ", team2Goals=" + team2Goals +
+                "team1: " + team1 +
+                ", team2: " + team2 +
+                ", team1Goals: " + team1Goals +
+                ", team2Goals: " + team2Goals +
                 '}';
     }
 
