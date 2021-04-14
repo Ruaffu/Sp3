@@ -127,47 +127,132 @@ public class Data
             {
                 match.getTeam1().setKnockedOut(true);
 
-            }
+                }
 
-            else
-            {
-                System.out.println("KnockOut matches can not be a tie ");
-            }
+                //Removes teams that lose a knockOut game
+                if (match.getTeam1().isKnockedOut() == true) {
+                    Main.currentTeams.remove(match.getTeam1());
+                } else if (match.getTeam2().isKnockedOut() == true) {
+                    Main.currentTeams.remove(match.getTeam2());
+                }
+                i++;
 
-          //Removes teams that lose a knockOut game
-           if (match.getTeam1().isKnockedOut() ==  true)
-            {
-                Main.currentTeams.remove(match.getTeam1());
-            }
-            else if (match.getTeam2().isKnockedOut() == true)
-            {
-                Main.currentTeams.remove(match.getTeam2());
-            }
-            i++;
         }
-
-
-        System.out.println("Qualified teams: "+ Main.currentTeams + "\n");
-        randomMatchUps(Main.currentTeams);
+        if (Main.currentTeams.size() > 1) {
+            System.out.println("Qualified teams: " + Main.currentTeams + "\n");
+        } else if (Main.currentTeams.size() <= 1) {
+            System.out.println("\n" + "The winner of the tournament is " + Main.currentTeams + "\n");
+        }
 
     }
 
 
-    public void tournamentSim()
+    public void tournamentSim() {
+        Scanner scan = new Scanner(System.in);
+
+            if (Main.teams.size() >= 16 && Main.currentTeams.size() == 0) {
+                System.out.println("GruppeSpil");
+                Main.currentTeams = Main.teams;
+                teamExecute(Main.matches);
+                saveGameData();
+                return;
+
+            } else if (Main.currentTeams.size() == 8) {
+                System.out.println("quarterfinals");
+                randomMatchUps(Main.currentTeams, Main.quarterFinals);
+                teamExecute(Main.quarterFinals);
+                randomMatchUps(Main.currentTeams, Main.semifinals);
+                return;
+
+            } else if (Main.currentTeams.size() == 4) {
+                System.out.println("semifinals");
+                teamExecute(Main.semifinals);
+                randomMatchUps(Main.currentTeams, Main.Finals);
+                return;
+            }
+
+
+            else if (Main.currentTeams.size() == 2) {
+            System.out.println("finals");
+            teamExecute(Main.Finals);
+            return;
+        }
+
+    }
+    public void registerMatches(ArrayList<Match> matchList)
     {
+        while(true) {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Match goal register");
+            for (int i = 0; i < matchList.size(); i++) {
+                System.out.println((i + 1) + "" + matchList.get(i));
+            }
 
-        randomMatchUps(Main.teams);
-        registerMatchResult(Main.matches);
+            System.out.println("Choose a Match to register goals");
+            int input = scan.nextInt();
+            Match match = matchList.get(input - 1);
 
-        randomMatchUps(Main.currentTeams);
-        registerMatchResult(Main.quarterFinals);
+            System.out.println(" Match " + input);
 
-        randomMatchUps(Main.currentTeams);
-        registerMatchResult(Main.semifinals);
+            System.out.println("Set goals for team 1 " + match.getTeam1());
+            int input2 = scan.nextInt();
+            match.setTeam1Goals(input2);
 
-        randomMatchUps(Main.currentTeams);
-        registerMatchResult(Main.Finals);
+            System.out.println("Set goals for team 2 " + match.getTeam2());
+            int input3 = scan.nextInt();
+            match.setTeam2Goals(input3);
 
+            if(input3 == input2)
+            {
+                System.out.println("A match can not be tie!");
+                match.setTeam1Goals(0);
+                match.setTeam2Goals(0);
+                System.out.println("Match have been reset to 0-0 score");
+            }
+
+            System.out.println("do you want to register again y/n");
+            char input4 = scan.next().charAt(0);
+            if(input4 == 'y')
+            {
+                System.out.println("Register a match again");
+            }
+            else if (input4 == 'n')
+            {
+                return;
+            }
+            else
+            {
+                System.out.println("That is not a valid option");
+                break;
+            }
+        }
+    }
+
+    public static String getGameDataFromSession() {
+        StringBuilder gameData = new StringBuilder();
+        for (Team t : Main.currentTeams) {
+            String teamData = String.format(t.getTeamName()+"\n");
+            gameData.append(teamData);
+        }
+        return gameData.toString();
+    }
+
+    public static void saveGameData() {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("src/data.txt");
+            writer.write(getGameDataFromSession());
+        } catch (IOException e) {
+            System.out.println("Couldn't instantiate the FileWriter in saveGameData()");
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (NullPointerException | IOException e) {
+                System.out.println("Couldn't close the FileWriter in saveGameData()");
+                e.printStackTrace();
+            }
+        }
     }
 
 }
